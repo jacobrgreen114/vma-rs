@@ -1,0 +1,15 @@
+[package]
+name = "vma"
+version = "0.1.0"
+authors = ["Jacob R. Green"]
+edition = "2021"
+
+[dependencies]
+vma-sys = { path = "../vma-sys" }
+vulkan = { path = "../vulkan" }
+
+static_assertions = "1.1.0"
+bitflags = "2.5.0"
+
+[build-dependencies]
+bindgen = "0.69.4"
