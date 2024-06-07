@@ -3,6 +3,8 @@
 
 use crate::macros::*;
 use crate::*;
+use std::ffi::c_void;
+use std::ptr::NonNull;
 use vma_sys::*;
 
 vma_handle!(Allocator, VmaAllocator);
@@ -88,13 +90,13 @@ impl crate::allocator::Allocator {
         unsafe { vmaDestroyImage(self.as_raw(), image.as_raw(), allocation.as_raw()) };
     }
 
-    pub fn map_memory(&self, allocation: Allocation) -> Result<*mut std::ffi::c_void, ()> {
+    pub fn map_memory<'a>(&self, allocation: Allocation) -> Result<NonNull<c_void>, ()> {
         let mut data = std::ptr::null_mut();
         let result = unsafe { vmaMapMemory(self.as_raw(), allocation.as_raw(), &mut data) };
         if result != vk::sys::VK_SUCCESS {
             return Err(());
         }
-        Ok(data)
+        Ok(NonNull::new(data).unwrap())
     }
 
     pub fn unmap_memory(&self, allocation: Allocation) {
